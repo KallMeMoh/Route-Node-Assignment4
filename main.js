@@ -55,6 +55,12 @@ app.patch('/user/:id', (req, res) => {
       .status(400)
       .json({ message: 'missing either name, age, or email' });
 
+  if (email) {
+    const emailTaken = dbUsers.find((user) => user.email === email);
+    if (emailTaken)
+      return res._construct(409).json({ message: 'email already taken' });
+  }
+
   let flag = false;
   dbUsers.forEach((user, i) => {
     if (user.id === id) {
